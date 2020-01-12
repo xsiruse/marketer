@@ -1,0 +1,386 @@
+{% extends '@nucleus/partials/particle.html.twig' %}
+
+{% set attr_extra = '' %}
+{% if particle.extra %}
+    {% for attributes in particle.extra %}
+        {% for key, value in attributes %}
+            {% set attr_extra = attr_extra ~ ' ' ~ key|e ~ '="' ~ value|e('html_attr') ~ '"' %}
+        {% endfor %}
+    {% endfor %}
+{% endif %}
+
+{% set article_settings = particle.article %}
+{% set filter = article_settings.filter %}
+{% set sort = article_settings.sort %}
+{% set limit = article_settings.limit %}
+{% set display = article_settings.display %}
+
+{# Category Finder #}
+{% set category_options = filter.categories ? {id: [filter.categories|split(','), 0]} : {} %}
+{% set categories = joomla.finder('category', category_options).published(1).language().limit(0).find() %}
+
+{# Content Finder #}
+{% if filter.articles %}
+	{% set article_options = filter.articles ? {id: [filter.articles|replace(' ', '')|split(',')]} : {} %}
+	{% set article_finder = joomla.finder('content', article_options).published(1).language() %}
+{% else %}
+	{% set article_finder = joomla.finder('content').category(categories).published(1).language() %}
+{% endif %}
+
+{% set featured = filter.featured|default('include') %}
+{% if featured == 'exclude' %}
+	{% do article_finder.featured(false) %}
+{% elseif featured == 'only' %}
+	{% do article_finder.featured(true) %}
+{% endif %}
+
+{% set articles = article_finder.order(sort.orderby, sort.ordering).limit(limit.total).start(limit.start).find() %}
+
+{% set particleheading %}
+	<div class="g-particle-intro">
+		{% if particle.mainheading %}
+			<h3 class="g-title g-main-title">{{ particle.mainheading|raw }}</h3>
+			<div class="g-title-separator {% if particle.introtext == false %}no-intro-text{% endif %}"></div>
+		{% endif %}	
+		{% if particle.introtext %}<p class="g-introtext">{{ particle.introtext|raw }}</p>{% endif %}
+	</div>
+{% endset %}
+
+{% set contentproitems %}
+	{% for row in articles|batch(particle.columns|default('3')|e) %}
+		{% if particle.behaviour|default('static') == 'static' %}<div class="g-grid">{% endif %}
+			{% for article in row %}
+
+				{% set cat = article.categories|last %}
+
+				{% set image %}
+					{% if particle.height %}
+						{% set articleimage %}
+							{%- if article.images.image_intro and display.image.enabled == 'intro' -%}
+								background-image: url({{ url(article.images.image_intro) }})
+							{%- elseif article.images.image_fulltext and display.image.enabled == 'full' -%}
+								background-image: url({{ url(article.images.image_fulltext) }})
+							{%- endif -%}
+						{% endset %}
+
+						{%- set imageheight -%}
+							height: {{ particle.height|default('')|e }}px
+						{%- endset -%}
+					{% endif %}
+
+					{% if article.images.image_intro and (display.image.enabled == 'intro' or display.image.enabled == 'show') %}
+
+						<div class="g-content-pro-image"{% if particle.height %} style="{{ articleimage }}; {{ imageheight }};"{% endif %}>
+							{% if particle.lightbox|default('enable') == 'enable' or particle.lightbox|default('enable') == 'disable' %}
+								{% if particle.lightbox|default('enable') == 'enable' %}
+									<a href="{{ url(article.images.image_intro, false, 0) }}" data-uk-lightbox class="uk-overlay uk-overlay-hover">
+									{% if particle.style|default('style1') == 'style1' %}
+										<span class="uk-overlay-panel uk-overlay-background uk-overlay-icon uk-overlay-fade"></span>
+									{% endif %}
+								{% endif %}
+								{% if particle.height == 0 %}
+									<img src="{{ url(article.images.image_intro) }}" {{ article.images.image_intro|imagesize|raw }} alt="{{ display.title.limit ? article.title|truncate_text(display.title.limit) : article.title }}" />
+								{% endif %}
+								{% if particle.lightbox|default('enable') == 'enable' %}
+									</a>
+								{% endif %}
+							{% endif %}
+
+							{% if particle.lightbox|default('enable') == 'disablelink' %}
+								<a href="{{ article.route }}">
+									{% if particle.height == 0 %}
+										<img src="{{ url(article.images.image_intro) }}" {{ article.images.image_intro|imagesize|raw }} alt="{{ display.title.limit ? article.title|truncate_text(display.title.limit) : article.title }}" />
+									{% endif %}	
+								</a>
+							{% endif %}
+						</div>
+
+					{% elseif article.images.image_fulltext and display.image.enabled == 'full' %}
+
+						<div class="g-content-pro-image"{% if particle.height %} style="{{ articleimage }}; {{ imageheight }};"{% endif %}>
+							{% if particle.lightbox|default('enable') == 'enable' or particle.lightbox|default('enable') == 'disable' %}
+								{% if particle.lightbox|default('enable') == 'enable' %}
+									<a href="{{ url(article.images.image_fulltext, false, 0) }}" data-uk-lightbox class="uk-overlay uk-overlay-hover">
+									{% if particle.style|default('style1') == 'style1' %}
+										<span class="uk-overlay-panel uk-overlay-background uk-overlay-icon uk-overlay-fade"></span>
+									{% endif %}
+								{% endif %}
+								{% if particle.height == 0 %}
+									<img src="{{ url(article.images.image_fulltext) }}" {{ article.images.image_fulltext|imagesize|raw }} alt="{{ display.title.limit ? article.title|truncate_text(display.title.limit) : article.title }}" />
+								{% endif %}
+								{% if particle.lightbox|default('enable') == 'enable' %}
+									</a>
+								{% endif %}
+							{% endif %}
+
+							{% if particle.lightbox|default('enable') == 'disablelink' %}
+								<a href="{{ article.route }}">
+									{% if particle.height == 0 %}
+										<img src="{{ url(article.images.image_intro) }}" {{ article.images.image_intro|imagesize|raw }} alt="{{ display.title.limit ? article.title|truncate_text(display.title.limit) : article.title }}" />
+									{% endif %}
+								</a>
+							{% endif %}
+						</div>
+
+					{% endif %}
+				{% endset %}
+
+				{% set articletitle %}
+					<h4 class="g-content-pro-title">
+						{%- if display.title.enabled|default('show') == 'show' -%}
+							<a href="{{ article.route }}">
+								{{- display.title.limit ? article.title|truncate_text(display.title.limit) : article.title -}}
+							</a>
+						{%- else -%}
+							{{- display.title.limit ? article.title|truncate_text(display.title.limit) : article.title -}}
+						{%- endif -%}
+					</h4>
+				{% endset %}	
+
+				{% set articledetails %}
+					<div class="g-article-details details-{{ particle.articledetails }}">
+						{% if display.date.enabled %}
+							<span class="g-article-date">
+								{%- if display.date.enabled == 'published' -%}
+									<i class="fa fa-clock-o"></i>{{- article.publish_up|date(display.date.format) -}}
+								{%- elseif display.date.enabled == 'modified' -%}
+									<i class="fa fa-clock-o"></i>{{- article.modified|date(display.date.format) -}}
+								{%- else -%}
+									<i class="fa fa-clock-o"></i>{{- article.created|date(display.date.format) -}}
+								{%- endif -%}
+							</span>
+						{% endif %}
+
+						{% if display.author.enabled %}
+							<span class="g-article-author">
+								{%- if display.author.enabled|default('show') == 'show' -%}
+									<i class="fa fa-user"></i>{{- article.author.name -}}
+								{%- else -%}
+									{% if article.created_by_alias %}
+										<i class="fa fa-user"></i>{{- article.created_by_alias -}}
+									{%- else -%}
+										<i class="fa fa-user"></i>{{- article.author.name -}}
+									{%- endif -%}
+								{%- endif -%}
+							</span>
+						{% endif %}
+
+						{% if display.category.enabled %}
+							{% set category_link = display.category.enabled == 'link' %}
+							<span class="g-article-category">
+								{% if category_link %}
+									<a href="{{ cat.route }}">
+										<i class="fa fa-folder-open"></i>{{- cat.title -}}
+									</a>
+								{% else %}
+									<i class="fa fa-folder-open"></i>{{- cat.title -}}
+								{% endif %}
+							</span>
+						{% endif %}
+
+						{% if display.hits.enabled %}
+							<span class="g-article-hits">
+								<i class="fa fa-eye"></i>{{- article.hits -}}
+							</span>
+						{% endif %}
+					</div>
+				{% endset %}
+
+				{% set articletext %}
+					{% set article_text = display.text.type == 'intro' ? article.introtext : article.text %}
+					<div class="g-content-pro-desc">
+						{%- if display.text.formatting == 'text' -%}
+							{{ article_text|truncate_text(display.text.limit)|raw }}
+						{%- else -%}
+							{{ gantry.platform.filter(article_text)|truncate_html(display.text.limit)|html|raw }}
+						{%- endif -%}
+					</div>
+				{% endset %}
+
+				{% set readmorebutton %}
+					<div class="g-article-read-more">
+						<a class="button" href="{{ article.route }}">
+							{{- display.read_more.label|default('Read More...') -}}
+						</a>
+					</div>
+				{% endset %}
+
+				{% set style1 %}
+					<div class="g-content-pro-item g-cat-{{ cat.alias|lower }}{% if article.featured == 1 %} g-featured-article{% endif %}">
+						{% if display.image.enabled and (article.images.image_intro or article.images.image_fulltext) %}
+							{{ image }}
+						{% endif %}
+
+						{% if display.title.enabled or particle.articledetails|default('show') != 'hide' or display.text.type or display.read_more.enabled %}
+							<div class="g-info-container">
+								{% if display.title.enabled %}
+									{{ articletitle }}
+								{% endif %}
+
+								{% if particle.articledetails|default('show') == 'show' %}
+									{{ articledetails }}
+								{% endif %}
+
+								{% if display.text.type %}
+									{{ articletext }}
+								{% endif %}
+
+								{% if display.read_more.enabled %}
+									{{ readmorebutton }}
+								{% endif %}
+
+								{% if particle.articledetails|default('show') == 'showbottom' %}
+									{{ articledetails }}
+								{% endif %}
+							</div>
+						{% endif %}
+					</div>
+				{% endset %}
+
+				{% set style2 %}
+					<div class="g-content-pro-item uk-overlay uk-overlay-hover g-cat-{{ cat.alias|lower }}{% if article.featured == 1 %} g-featured-article{% endif %}">
+						{% if display.image.enabled and (article.images.image_intro or article.images.image_fulltext) %}
+							{{ image }}
+						{% endif %}
+
+						{% if display.title.enabled or particle.articledetails|default('show') != 'hide' or display.text.type or display.read_more.enabled %}
+							<div class="g-info-container-style2 uk-overlay-panel uk-overlay-background uk-overlay-bottom uk-overlay-slide-bottom">
+								{% if display.title.enabled %}
+									{{ articletitle }}
+								{% endif %}
+
+								{% if particle.articledetails|default('show') == 'show' %}
+									{{ articledetails }}
+								{% endif %}
+
+								{% if display.text.type %}
+									{{ articletext }}
+								{% endif %}
+
+								{% if display.read_more.enabled %}
+									{{ readmorebutton }}
+								{% endif %}
+
+								{% if particle.articledetails|default('show') == 'showbottom' %}
+									{{ articledetails }}
+								{% endif %}
+							</div>
+						{% endif %}
+					</div>
+				{% endset %}
+
+				{% set style3 %}
+					<div class="g-content-pro-item uk-overlay g-cat-{{ cat.alias|lower }}{% if article.featured == 1 %} g-featured-article{% endif %}">
+						{% if display.image.enabled and (article.images.image_intro or article.images.image_fulltext) %}
+							{{ image }}
+						{% endif %}
+
+						{% if display.title.enabled or particle.articledetails|default('show') != 'hide' or display.text.type or display.read_more.enabled %}
+							<div class="g-info-container-style2 uk-overlay-panel uk-overlay-background uk-overlay-bottom">
+								{% if display.title.enabled %}
+									{{ articletitle }}
+								{% endif %}
+
+								{% if particle.articledetails|default('show') == 'show' %}
+									{{ articledetails }}
+								{% endif %}
+
+								{% if display.text.type %}
+									{{ articletext }}
+								{% endif %}
+
+								{% if display.read_more.enabled %}
+									{{ readmorebutton }}
+								{% endif %}
+
+								{% if particle.articledetails|default('show') == 'showbottom' %}
+									{{ articledetails }}
+								{% endif %}
+							</div>
+						{% endif %}
+					</div>
+				{% endset %}
+
+				{% if particle.behaviour|default('static') == 'static' %}
+					<div class="g-block">
+						<div {% if particle.gutter|default('enabled') == 'enabled' %}class="g-content"{% endif %}>
+							{% if particle.style|default("style1") == "style1" %}{{ style1 }}{% endif %}
+							{% if particle.style|default("style1") == "style2" %}{{ style2 }}{% endif %}
+							{% if particle.style|default("style1") == "style3" %}{{ style3 }}{% endif %}
+						</div>
+					</div>
+				{% endif %}
+
+				{% if particle.behaviour|default('static') == 'slider' or particle.behaviour|default('static') == 'slideset' %}
+					<li>
+						{% if particle.style|default("style1") == "style1" %}{{ style1 }}{% endif %}
+						{% if particle.style|default("style1") == "style2" %}{{ style2 }}{% endif %}
+						{% if particle.style|default("style1") == "style3" %}{{ style3 }}{% endif %}
+					</li>
+				{% endif %}
+
+			{% endfor %}
+		{% if particle.behaviour|default('static') == 'static' %}</div>{% endif %}
+	{% endfor %}
+{% endset %}
+
+{% block particle %}
+	
+	{% if particle.behaviour|default('static') == 'static' %}
+		<div class="g-content-pro {{ particle.style|default("style1")|e }}{% if particle.css.class %} {{ particle.css.class|e }}{% endif %}{% if particle.pullup|default(0) %} g-pullup{% endif %}{% if particle.gutter|default('enabled') == 'enabled' %} gutter-enabled{% else %} gutter-disabled{% endif %}" {% if particle.extra %}{{ attr_extra|raw }}{% endif %}>
+			{% if particle.mainheading or particle.introtext %}
+				{{ particleheading }}
+			{% endif %}
+			{{ contentproitems }}
+		</div>
+	{% endif %}
+	{% if particle.behaviour|default('static') == 'slider' %}
+		<div class="g-content-pro-slider {{ particle.style|default("style1")|e }}{% if particle.css.class %} {{ particle.css.class|e }}{% endif %}{% if particle.pullup|default(0) %} g-pullup{% endif %}{% if particle.gutter|default('enabled') == 'enabled' %} gutter-enabled{% else %} gutter-disabled{% endif %}" {% if particle.extra %}{{ attr_extra|raw }}{% endif %}>
+			{% if particle.mainheading or particle.introtext %}
+				{{ particleheading }}
+			{% endif %}		    	
+			<div class="uk-slidenav-position" data-uk-slider{% if particle.autoplay|default("disable") == "enable" %}="{autoplay:true, autoplayInterval: {{ particle.autoplayInterval|default(7000)|e}}}"{% endif %}>
+				<div class="uk-slider-container">
+					<ul class="uk-slider{% if particle.gutter|default('enabled') == 'enabled' %} uk-grid{% endif %} uk-grid-width-medium-1-{{ particle.columns|default('3')|e }}">
+						{{ contentproitems }}
+					</ul>
+				</div>
+				{% if (particle.navigation|default('arrows') == 'arrows') or (particle.navigation|default('arrows') == 'both') %}
+					<div class="g-particle-navigation">
+						<a href="" class="uk-slidenav uk-slidenav-previous" data-uk-slider-item="previous"></a>
+						<a href="" class="uk-slidenav uk-slidenav-next" data-uk-slider-item="next"></a>
+					</div>
+				{% endif %}
+			</div>		    	
+		</div>
+	{% endif %}
+	{% if particle.behaviour|default('static') == 'slideset' %}
+		<div class="g-content-pro-slideset {{ particle.style|default("style1")|e }}{% if particle.css.class %} {{ particle.css.class|e }}{% endif %}{% if particle.pullup|default(0) %} g-pullup{% endif %}{% if particle.gutter|default('enabled') == 'enabled' %} gutter-enabled{% else %} gutter-disabled{% endif %}" {% if particle.extra %}{{ attr_extra|raw }}{% endif %}>
+			{% if particle.mainheading or particle.introtext %}
+				{{ particleheading }}
+			{% endif %}	    	
+			<div class="uk-slidenav-position" data-uk-slideset="{small: 1, medium: {{ particle.columns|default('3')|e }}, large: {{ particle.columns|default('3')|e }}, duration: {{ particle.duration|default(200)|e}}, {% if particle.autoplay|default("disable") == "enable" %}autoplay: 'true', autoplayInterval: {{ particle.autoplayInterval|default(7000)|e}},{% endif %} animation: '{{ particle.animation|default('fade')|e}}'}">
+				<div class="uk-slider-container">
+					<ul class="uk-slideset uk-grid">
+						{{ contentproitems }}
+					</ul>
+				</div>
+				{% if (particle.navigation|default('arrows') == 'arrows') or (particle.navigation|default('arrows') == 'both') %}
+					<div class="g-particle-navigation">
+						<a href="" class="uk-slidenav uk-slidenav-previous" data-uk-slideset-item="previous"></a>
+						<a href="" class="uk-slidenav uk-slidenav-next" data-uk-slideset-item="next"></a>
+					</div>
+				{% endif %}
+				{% if (particle.navigation|default('arrows') == 'dots') or (particle.navigation|default('arrows') == 'both') %}
+					<ul class="uk-slideset-nav uk-dotnav uk-flex-center">
+	    			{% set counter = 0 %}
+	    			{% for article in articles %}
+	    				<li data-uk-slideset-item="{{ counter }}"><a href=""></a></li>
+	    				{% set counter = counter + 1 %}
+	    			{% endfor %}
+					</ul>
+				{% endif %}
+			</div>		    	
+		</div>
+	{% endif %}
+{% endblock %}

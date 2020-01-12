@@ -1,0 +1,27 @@
+{% extends '@nucleus/partials/particle.html.twig' %}
+
+
+
+{% block particle %}
+{% if particle.enabled %}
+  {% set transition = particle.transition == "none" ? "" : particle.transition %}
+  {% set position = particle.position == "default" ? "" : particle.position %}
+  <div class="jl-overlay {{particle.class}}">
+    {% if particle.style == 1 %}
+      <div class="uk-inline-clip {% if particle.overlaytransition != "none"%} uk-transition-toggle {% endif %}">
+        <img src="{{url(particle.image)}}" alt="{{particle.altimg}}">
+        <div class="uk-overlay {{particle.background|default('uk-overlay-default')}} {{particle.overlayposition|default('uk-position-bottom')}} {{particle.overlaytransition|default('none')}}">
+          <div class="jl-overlay-text {% if particle.overlayposition == "uk-position-cover"%} uk-overlay {{particle.textposition}}{% endif %}   ">
+            {{particle.text|html|raw}}
+          </div>
+        </div>
+      </div>
+    {% elseif particle.style == 2 %}
+    <div class="uk-inline-clip uk-transition-toggle">
+      <img src="{{url(particle.image1)}}" alt="{{particle.altimg1}}">
+      <img class="{{particle.overlaytransition1|default('uk-transition-fade')}} uk-position-cover" src="{{url(particle.image2)}}" alt="{{particle.altimg2}}">
+    </div>
+    {% endif %}
+  </div>
+{% endif %}
+{% endblock %}

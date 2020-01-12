@@ -1,0 +1,12 @@
+@font-face {
+    font-family: 'Trajan Pro 3';
+    src: url('TrajanPro3-Regular.eot');
+    src: url('TrajanPro3-Regular.eot?#iefix') format('embedded-opentype'),
+        url('TrajanPro3-Regular.woff2') format('woff2'),
+        url('TrajanPro3-Regular.woff') format('woff'),
+        url('TrajanPro3-Regular.ttf') format('truetype'),
+        url('TrajanPro3-Regular.svg#TrajanPro3-Regular') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+

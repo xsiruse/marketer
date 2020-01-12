@@ -1,0 +1,13 @@
+@font-face {
+    font-family: 'neumannregular';
+    src: url('td-neumann-webfont.eot');
+    src: url('td-neumann-webfont.eot?#iefix') format('embedded-opentype'),
+         url('td-neumann-webfont.woff2') format('woff2'),
+         url('td-neumann-webfont.woff') format('woff'),
+         url('td-neumann-webfont.ttf') format('truetype'),
+         url('td-neumann-webfont.svg#neumannregular') format('svg');
+    font-weight: normal;
+    font-style: normal;
+
+}
+

@@ -1,0 +1,51 @@
+{% extends '@nucleus/partials/particle.html.twig' %}
+
+{% block stylesheets %}
+  <link rel="stylesheet" href="{{ url('gantry-theme://css/uikit.min.css') }}" type="text/css" />
+  <link rel="stylesheet" href="{{ url('gantry-theme://css/components/progress.min.css') }}" type="text/css" />
+{% endblock %}
+
+{% block javascript_footer %}
+  {% do gantry.load('jquery') %}
+  <script src="{{ url('gantry-theme://js/uikit.min.js') }}"></script>
+  <script src="{{ url('gantry-theme://js/components/grid.min.js') }}"></script>
+{% endblock %}
+
+{% block particle %}
+    {% if particle.enabled %}
+        {% if particle.style == 1 %}
+          {% for item in particle.items %}
+          <div class="jl-progressbar {% if particle.css.class %}{{particle.css.class}} {% endif %} jl-progressbar-style1 uk-progress {% if item.pb.color %}{{item.pb.color}}{% endif %} {% if item.pb.striped %}{{item.pb.striped}}{% endif %}">
+              <div class="jl-progressbar-content uk-progress-bar uk-scrollspy-init-inview uk-scrollspy-inview uk-animation-fade "  data-uk-scrollspy="{cls:'uk-animation-slide-left', repeat: false , delay:200}"  style="width:{{item.pb.percent}}%; animation-duration:{% if item.pb.duration %}{{item.pb.duration}}s{% endif %}">
+                <span class="jl-progressbar-text ">{{item.pb.text}}</span>
+                <span class="jl-progressbar-percent" style="opacity: 1; margin-right: 0px; position:absolute;">{{item.pb.percent}}%</span>
+              </div>
+          </div>
+          {% endfor %}
+
+        {% elseif particle.style == 2 %}
+          {% for item in particle.items %}
+          <div class="jl-progressbar {% if particle.css.class %}{{particle.css.class}} {% endif %} jl-progressbar-style2 uk-progress {% if item.pb.color %}{{item.pb.color}}{% endif %} {% if item.pb.striped %}{{item.pb.striped}}{% endif %}">
+              <div class="jl-progressbar-content uk-progress-bar uk-scrollspy-init-inview uk-scrollspy-inview uk-animation-fade "  data-uk-scrollspy="{cls:'uk-animation-slide-left', repeat: false , delay:200}"  style="width:{{item.pb.percent}}%; animation-duration:{% if item.pb.duration %}{{item.pb.duration}}s{% endif %}">
+                <span class="jl-progressbar-text ">{{item.pb.text}}</span>
+                <span class="jl-progressbar-percent" style="opacity: 1; margin-right: 0px; position:absolute;">{{item.pb.percent}}%</span>
+              </div>
+          </div>
+          {% endfor %}
+        {% elseif particle.style == 3 %}
+
+          {% for item in particle.items %}
+          <div class="jl-progressbar-style3">
+          <div class="jl-progressbar-text "><span>{{item.pb.text}}</span></div>
+          <div class="jl-progressbar-percent" style="opacity: 1; left:{{item.pb.percent - 3 }}% ; position:absolute;"><span>{{item.pb.percent}}%</span></div>
+          <div class="jl-progressbar {% if particle.css.class %}{{particle.css.class}} {% endif %} uk-progress uk-progress-small {% if item.pb.color %}{{item.pb.color}}{% endif %} {% if item.pb.striped %}{{item.pb.striped}}{% endif %} ">
+              <div class="jl-progressbar-content uk-progress-bar  uk-scrollspy-init-inview uk-scrollspy-inview uk-animation-fade "  data-uk-scrollspy="{cls:'uk-animation-slide-left', repeat: false , delay:200}"  style="width:{{item.pb.percent}}%; animation-duration:{% if item.pb.duration %}{{item.pb.duration}}s{% endif %}">
+              </div>
+          </div>
+          </div>
+          {% endfor %}
+
+
+        {% endif %}
+    {% endif %}
+{% endblock %}

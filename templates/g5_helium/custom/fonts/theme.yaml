@@ -1,0 +1,9 @@
+fonts:
+  Caviar-Dreams:
+    600italic: 'gantry-theme://fonts/caviardreams/caviardreams_bolditalic_macroman'
+    600: 'gantry-theme://fonts/caviardreams/caviardreams_bolditalic_macroman'
+    400italic: 'gantry-theme://fonts/caviardreams/caviardreams_italic_macroman'
+    400: 'gantry-theme://fonts/caviardreams/caviardreams_regular_macroman'
+
+    Neumann:
+	400: 'gantry-theme://fonts/neumann'

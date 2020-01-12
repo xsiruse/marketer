@@ -1,0 +1,57 @@
+{% extends '@nucleus/partials/particle.html.twig' %}
+
+{% block particle %}
+    {% if particle.enabled %}
+        {% set rand = random() %}
+        <form action="https://www.paypal.com/cgi-bin/webscr" method="post">
+            <input type="hidden" name="business" value="{{particle.email}}">
+            <input type="hidden" name="cmd" value="_donations">
+            <input type="hidden" name="item_name" value="{{particle.name}}">
+            <input type="hidden" name="item_number" value="{{particle.campaign}}">
+            <input type="hidden" name="currency_code" value="{{particle.currency}}">
+            {% if particle.fixedamount %}
+                <input type="hidden" placeholder="Amount" name="{{particle.fixedamount}}"/>
+            {% endif %}
+
+            {% if particle.currency == "USD" %}
+                {% set currency = "$" %}
+            {% elseif particle.currency == "GBP" %}
+                {% set currency = "£" %}
+            {% elseif particle.currency == "JPY" %}
+                {% set currency = "¥" %}
+            {% elseif particle.currency == "EUR" %}
+                {% set currency = "€" %}
+            {% else %}
+              {% set currency = particle.currency %}
+            {% endif %}
+
+            <!-- Display the payment button. -->
+            <div class="jl-paypal-donate">
+                <div class="jl-donate-container">
+                  {% if particle.showamount %}
+                    {% if particle.fixedamount == "" %}
+                      <input type="text" placeholder="Enter amount ({{currency}})" name="amount" value="{{particle.fixedamount}}"/>
+                    {% else %}
+                    <div class="jl-donate-amount">
+                      {{currency}} {{particle.fixedamount}}
+                    </div>
+                      <input type="hidden" name="amount" value="{{particle.fixedamount}}"/>
+                    {% endif %}
+                  {% endif %}
+                  {% set image = particle.image == "" ? "gantry-media://paypal/" ~ particle.images ~ ".png" : particle.image %}
+                  <input class="jl-donate-button" type="image" name="submit" src="{{url(image)}}" alt="Donate"/>
+                  {% if particle.creditcard %}
+                    <div class="jl-donate-cards-image">
+                        <img src="{{url("gantry-media://paypal/logo_ccVisa.gif")}}" class="marginBottom ccLogo V" alt="Visa" title="Visa" border="0"><wbr>
+                        <img src="{{url("gantry-media://paypal/logo_ccMC.gif")}}" class="marginBottom ccLogo M" alt="Mastercard " title="" border="0"><wbr>
+                        <img src="{{url("gantry-media://paypal/logo_ccAmex.gif")}}" class="marginBottom ccLogo A" alt="American Express " border="0"><wbr>
+                        <img src="{{url("gantry-media://paypal/logo_ccDiscover.gif")}}" class="marginBottom ccLogo D" alt="Discover" title="Discover" border="0"><wbr>
+                        <img src="{{url("gantry-media://paypal/PayPal_mark_37x23.gif")}}" class="marginBottom" alt="PayPal " border="0"><wbr>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </form>
+
+    {% endif %}
+{% endblock %}

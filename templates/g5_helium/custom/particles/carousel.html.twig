@@ -1,0 +1,115 @@
+{% extends '@nucleus/partials/particle.html.twig' %}
+
+
+{% block stylesheets %}
+  <link rel="stylesheet" href="{{ url('gantry-theme://css/uikit.min.css') }}" type="text/css" />
+  <link rel="stylesheet" href="{{ url('gantry-theme://css/components/slider.min.css') }}" type="text/css" />
+  <link rel="stylesheet" href="{{ url('gantry-theme://css/components/dotnav.min.css') }}" type="text/css" />
+  <link rel="stylesheet" href="{{ url('gantry-theme://css/components/slidenav.min.css') }}" type="text/css" />
+{% endblock %}
+
+{% block javascript_footer %}
+  <script src="{{ url('gantry-theme://js/uikit.min.js') }}"></script>
+  <script src="{{ url('gantry-theme://js/components/slider.min.js') }}"></script>
+  <script src="{{ url('gantry-theme://js/components/slideset.min.js') }}"></script>
+{% endblock %}
+
+
+{% block particle %}
+    {% if particle.enabled %}
+
+        {% set medium = particle.columns/2 %}
+        {% set medium = medium|round(0, 'ceil') %}
+        {% set small = particle.columns/3 %}
+        {% set small = small|round(0,'ceil') %}
+
+        {# Init Slider #}
+        {% set slidenav = particle.slidenav ? '<a href="" class="uk-slidenav uk-slidenav-previous" data-uk-slider-item="previous"></a><a href="" class="uk-slidenav uk-slidenav-next" data-uk-slider-item="next"></a>' : '' %}
+
+        {% if particle.dotnav %}
+          {% set dotnav = '<ul class="uk-slider-nav uk-dotnav uk-flex-center">' %}
+          {% for item in particle.items %}
+          {% set dotnav = dotnav ~ '<li data-uk-slider-item="' ~ loop.index0 ~ '"><a href=""></a></li>'%}
+          {% endfor %}
+          {% set dotnav = dotnav ~ '</ul>' %}
+        {% else %}
+          {% set dotnav = '' %}
+        {% endif %}
+
+        {% set options = '{
+                      center:' ~ (particle.slider.center ? "true" : "false") ~ ',
+                      infinite:' ~ (particle.slider.infinite ? "true" : "false") ~ ',
+                      autoplay:' ~ (particle.autoplay ? "true" : "false") ~ ',
+                      pauseOnHover:' ~ (particle.pause ? "true" : "false") ~ ',
+                      autoplayInterval:' ~ particle.interval ~ '
+                    }' %}
+        {% set slider = '<div class="uk-slidenav-position" data-uk-slider="' ~ options ~'"><div class="uk-slider-container"><div class="uk-slider ' ~ particle.gutter ~' uk-grid-width-small-1-' ~ small ~ ' uk-grid-width-medium-1-' ~ medium ~ ' uk-grid-width-large-1-' ~ particle.columns ~ '">' %}
+        {% set sliderend = '</div></div>' ~ slidenav ~ dotnav ~ '</div>' %}
+
+        {# Init Slideset #}
+        {% set dotnav = particle.dotnav ? '<ul class="uk-slideset-nav uk-dotnav uk-flex-center"></ul>' : '' %}
+        {% set slidenav = particle.slidenav ? '<a href="" class="uk-slidenav uk-slidenav-previous" data-uk-slideset-item="previous"></a><a href="" class="uk-slidenav uk-slidenav-next" data-uk-slideset-item="next"></a>' : '' %}
+
+        {% set options = '{
+                  small:' ~ small|round ~ ',
+                  medium:' ~ medium|round ~ ',
+                  large:' ~ particle.columns ~ ',
+                  xlarge:' ~ particle.columns ~ ',
+                  animation: \'' ~ particle.slideset.animation ~ '\',
+                  duration:' ~ particle.slideset.duration ~ ',
+                  autoplay:' ~ (particle.autoplay ? "true" : "false") ~ ',
+                  pauseOnHover:' ~ (particle.pause ? "true" : "false") ~ ',
+                  autoplayInterval:' ~ particle.interval ~ '
+               }' %}
+
+        {% set slideset = '<div data-uk-slideset="' ~ options ~ '"><div class="uk-slidenav-position"><div class="uk-grid '~ particle.gutter ~' uk-slideset">' %}
+        {% set slidesetend = '</div>' ~ slidenav ~ '</div>' ~ dotnav ~ '</div>' %}
+
+        {# Init Default #}
+        {% set default = '<div class=" ' ~ particle.gutter ~' uk-grid uk-grid-width-small-1-' ~ small ~ ' uk-grid-width-medium-1-' ~ medium ~ ' uk-grid-width-large-1-' ~ particle.columns ~ '" data-uk-grid-margin>' %}
+        {% set defaultend = '</div>' %}
+
+        {# Switch Slide Type #}
+        {% if particle.slide == "slider" %}
+          {% set begin = slider %}
+          {% set end = sliderend %}
+        {% elseif particle.slide == "slideset" %}
+          {% set begin = slideset %}
+          {% set end = slidesetend %}
+        {% else %}
+          {% set begin = default %}
+          {% set end = defaultend %}
+        {% endif %}
+
+        {# Begin Carousel #}
+        <div class="jl-carousel {{particle.class}}">
+            {{ begin|raw }}
+            {% for item in particle.items %}
+                {% if particle.style == 0 %}
+                    {# Style Defalut #}
+                    <div class="jl-carousel-item {{item.class}}">
+                        <div class="jl-carousel-image">
+                                <img src="{{url(item.image)}}">
+                        </div>
+                    </div>
+                    {# End Style Default #}
+                {% elseif particle.style == 1 %}
+                    {# Style 1 #}
+                    <div class="jl-carousel-item {{item.class}}">
+                        <div class="jl-carousel-image uk-overlay uk-overlay-hover">
+                          <img src="{{url(item.image)}}">
+                          {% if item.name %}
+                          <div class="uk-overlay-panel uk-overlay-background uk-overlay-slide-bottom uk-flex uk-flex-middle uk-flex-center">
+                            <a href="{{item.link}}">{{item.name|raw}}</a>
+                          </div>
+                          {% endif %}
+                        </div>
+                    </div>
+                    {# End Style 1 #}
+                {% endif %}
+            {% endfor %}
+            {{end|raw}}
+        </div>
+        {# End Carousel #}
+    {% endif %}
+{% endblock %}

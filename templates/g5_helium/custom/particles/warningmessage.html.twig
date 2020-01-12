@@ -1,0 +1,86 @@
+{% extends '@nucleus/partials/particle.html.twig' %}
+
+
+{% block javascript_footer %}
+  <script>
+  function createCookie(name,value,days) {
+  if (days) {
+    var date = new Date();
+    date.setTime(date.getTime()+(days*24*60*60*1000));
+    var expires = "; expires="+date.toGMTString();
+  }
+  else var expires = "";
+  document.cookie = name+"="+value+expires+"; path=/";
+  }
+
+  function readCookie(name) {
+  var nameEQ = name + "=";
+  var ca = document.cookie.split(';');
+  for(var i=0;i < ca.length;i++) {
+    var c = ca[i];
+    while (c.charAt(0)==' ') c = c.substring(1,c.length);
+    if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
+  }
+  return null;
+  }
+
+  function eraseCookie(name) {
+  createCookie(name,"",-1);
+  }
+
+  {% if particle.mode == "1" %}
+   x = null;
+  {% elseif particle.mode == "2" %}
+  //x = sessionStorage['warning-authen'];
+  var x = readCookie('warning-authen');
+  {% elseif particle.mode == "3" %}
+  var x = readCookie('warning-authen');
+  {% endif %}
+
+  if (x == null) {
+  var iDiv = document.createElement('div');
+  iDiv.className = "uk-modal";
+  iDiv.id = "jl-warning";
+
+  var dialog = document.createElement('div');
+  dialog.className= "uk-modal-dialog";
+  dialog.style.borderRadius  = "1% 1% 1% 1%";
+  iDiv.appendChild(dialog);
+
+  var header = document.createElement('div');
+  header.className= "uk-modal-header jl-warning-title";
+  header.innerHTML = '<h2><b><i class="fa {{particle.icon}} "><\/i>{{particle.title}}</b><\/h2>';
+  dialog.appendChild(header);
+
+  var content = document.createElement('div');
+  content.className= "jl-warning-content uk-modal-body";
+  content.innerHTML = '{{particle.content|e('js')|raw}}';
+  dialog.appendChild(content);
+
+  var footer = document.createElement('div');
+  footer.className= "uk-modal-footer uk-text-right jl-warning-button uk-text-center";
+  footer.innerHTML = '<button id="jl-warning-exit" style="margin-right:10px" type="button" class="uk-button uk-button-danger jl-warning-cancle border-round">{{particle.exit}}<\/button><button id="jl-warning-enter" type="button" class="uk-button uk-button-primary jl-warning-ok border-round">{{particle.enter}}<\/button>';
+  dialog.appendChild(footer);
+
+  document.getElementsByTagName('body')[0].appendChild(iDiv);
+  var modal = UIkit.modal("#jl-warning",{
+    escClose: false,
+    bgClose: false
+  });
+  modal.show();
+
+  document.getElementById("jl-warning-exit").onclick = function () { location.href="{{particle.exitadd}}" };
+  document.getElementById("jl-warning-enter").onclick = function () {
+    {% if particle.mode == "2" %}
+      //var myVariable = true;
+      //sessionStorage['warning-authen'] = myVariable;
+      //myVariable = sessionStorage['warning-authen'];
+      createCookie("warning-authen","true",0);
+    {% elseif particle.mode == "3" %}
+      createCookie("warning-authen","true",1000);
+    {% endif %}
+    modal.hide()
+  };
+  }
+  </script>
+{% endblock %}

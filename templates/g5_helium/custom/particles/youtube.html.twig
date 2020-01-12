@@ -1,0 +1,45 @@
+{% extends '@nucleus/partials/particle.html.twig' %}
+
+{% set rand = random() %}
+
+{% block stylesheets %}
+  <link rel="stylesheet" href="{{ url('gantry-theme://css/magnific-popup.css') }}" type="text/css"/>
+{% endblock %}
+
+{% block javascript_footer %}
+  <script src="{{ url('gantry-theme://js/jquery.magnific-popup.min.js') }}"></script>
+  <script>
+  jQuery(function($){
+    $(document).ready(function() {
+      jQuery('#jl-youtube-play-{{rand}}').magnificPopup({
+        type: 'iframe',
+      });
+    });
+  });
+  </script>
+{% endblock %}
+
+{% block particle %}
+    {% if particle.enabled %}
+        {% set autoplay = particle.autoplay ? "?autoplay=1" : "" %}
+        {% set url = "https://www.youtube.com/embed/" ~ particle.id ~ autoplay %}
+        {% if particle.type == 2 %}
+            <div id="jl-youtube-{{rand}}" class="jl-youtube">
+              <div class="uk-inline">
+                <img src='{{url(particle.poster)}}'/>
+                <div class="uk-overlay uk-overlay-default uk-position-center">
+                  <a id="jl-youtube-play-{{rand}}" href="http://www.youtube.com/watch?v={{particle.id}}{{particle.autoplay ? "" : "?autoplay=0"}}">
+                      <i class="jl-youtube-icon fa fa-youtube-play"></i>
+                  </a>
+              </div>
+              </div>
+            </div>
+
+        {% else %}
+            <div id="jl-youtube-{{rand}}" class="jl-youtube embed-container">
+                <iframe src="{{url}}" frameborder="0" {{particle.fullscreen ? "allowfullscreen" : ""}}></iframe>
+            </div>
+        {% endif %}
+
+    {% endif %}
+{% endblock %}

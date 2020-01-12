@@ -1,0 +1,44 @@
+@include import-font('caviardreams');
+@include import-font('neumann');
+
+@include font-face('CaviarDreams', 'gantry-theme://fonts/CaviarDreams/CaviarDreams-webfont');
+    @font-face {
+	font-family: "CaviarDreams";
+	src: url("fonts/CaviarDreams/CaviarDreams-webfont?") format("eot"),
+		 url("fonts/CaviarDreams/CaviarDreams-webfont.woff2") format("woff2"),
+		 url("fonts/CaviarDreams/CaviarDreams-webfont.woff") format("woff"),
+		 url("fonts/CaviarDreams/CaviarDreams-webfont.ttf") format("truetype"),
+		 url("fonts/CaviarDreams/CaviarDreams-webfont.svg#CaviarDreams") format("svg");
+}
+@include font-face('CaviarDreams bold', 'gantry-theme://fonts/CaviarDreams/Caviar_Dreams_Bold-webfont', bold);
+ @font-face {
+	font-family: "CaviarDreams";
+	font-weight: bold;
+	src: url("fonts/CaviarDreams/CaviarDreams-webfont?") format("eot"),
+		 url("fonts/CaviarDreams/CaviarDreams-webfont.woff2") format("woff2"),
+		 url("fonts/CaviarDreams/CaviarDreams-webfont.woff") format("woff"),
+		 url("fonts/CaviarDreams/CaviarDreams-webfont.ttf") format("truetype"),
+		 url("fonts/CaviarDreams/CaviarDreams-webfont.svg#CaviarDreams") format("svg");
+}
+@include font-face('CaviarDreams italic', 'gantry-theme://fonts/CaviarDreams/CaviarDreams_Italic-webfont', italic);
+    @font-face {
+	font-family: "CaviarDreams";
+	font-style: italic;
+	font-weight: normal;
+	src: url("fonts/CaviarDreams/CaviarDreams-webfont?") format("eot"),
+		 url("fonts/CaviarDreams/CaviarDreams-webfont.woff2") format("woff2"),
+		 url("fonts/CaviarDreams/CaviarDreams-webfont.woff") format("woff"),
+		 url("fonts/CaviarDreams/CaviarDreams-webfont.ttf") format("truetype"),
+		 url("fonts/CaviarDreams/CaviarDreams-webfont.svg#CaviarDreams") format("svg");
+}
+@include font-face('CaviarDreams bold italic', 'gantry-theme://fonts/CaviarDreams/Caviar_Dreams_BoldItalic-webfont', bold, italic);
+@font-face {
+	font-family: "CaviarDreams";
+	font-style: italic;
+	font-weight: bold;
+	src: url("fonts/CaviarDreams/CaviarDreams-webfont?") format("eot"),
+		 url("fonts/CaviarDreams/CaviarDreams-webfont.woff2") format("woff2"),
+		 url("fonts/CaviarDreams/CaviarDreams-webfont.woff") format("woff"),
+		 url("fonts/CaviarDreams/CaviarDreams-webfont.ttf") format("truetype"),
+		 url("fonts/CaviarDreams/CaviarDreams-webfont.svg#CaviarDreams") format("svg");
+}

@@ -1,0 +1,74 @@
+@import "dependencies";
+
+// Tabs Particle
+@import "tabs";
+
+// Top News
+@import "top-news-joomla";
+
+// youtube Particle
+@import "youtube";
+
+//Slideshow Particle
+@import "slideshow";
+
+//One Page Menue Particle
+@import "onepage-menu";
+
+//Progress Bar 
+@import "progressbar";
+
+
+//Carousel 
+@import "carousel";
+
+//Back To Top
+@import "backtotop";
+
+//content-pro-joomla
+@import "content-pro-joomla";
+
+//Custom Fonts
+@import "fonts";
+
+
+/* Adding Font BLOODY */
+
+
+@include font-face('Neumann', 'gantry-theme://fonts/neumann/td-neumann-webfont');
+
+.font-family-neumann {
+  font-family: 'BloodyNormal',Helvetica,Arial,sans-serif;
+  font-weight: normal;
+  font-style: normal;
+}
+
+@include font-face('CaviarDreams', 'gantry-theme://fonts/caviardreams/CaviarDreams-webfont', normal);
+
+@include font-face('CaviarDreams bold', 'gantry-theme://fonts/caviardreams/Caviar_Dreams_Bold-webfont', bold);
+@include font-face('CaviarDreams italic', 'gantry-theme://fonts/caviardreams/CaviarDreams_Italic-webfont', italic);
+@include font-face('CaviarDreams bold italic', 'gantry-theme://fonts/caviardreams/CaviarDreams_BoldItalic-webfont', bold, italic);
+
+
+@include font-face('Marshall', 'gantry-theme://fonts/Marshall/amplify_personaluseonly-webfont');
+
+.font-family-Marshall {
+  font-family: 'Marshall',Helvetica,Arial,sans-serif;
+  font-weight: normal;
+  font-style: normal;
+}
+
+@include font-face('Dited', 'gantry-theme://fonts/dited_regular_macroman/dited_regular-webfont');
+
+.font-family-Dited {
+  font-family: 'Dited',Helvetica,Arial,sans-serif;
+  font-weight: normal;
+  font-style: normal;
+}
+
+@include import-font('TrajanPro3', 'gantry-theme://fonts/TrajanPro3/TrajanPro3-Regular-webfont');
+.font-family-TrajanPro3 {
+  font-family: TrajanPro3,Marshall,Helvetica,Arial,sans-serif;
+  font-weight: normal;
+  font-style: normal;
+}

@@ -1,0 +1,36 @@
+{% extends '@nucleus/partials/particle.html.twig' %}
+
+{% block stylesheets %}
+  <link rel="stylesheet" href="{{ url('gantry-theme://css/video-js.min.css') }}" type="text/css" />
+{% endblock %}
+
+{% block javascript_footer %}
+  {% do gantry.load("jquery") %}
+  <script src="{{ url('gantry-theme://js/video.min.js') }}"></script>
+{% endblock %}
+
+{% block particle %}
+{% if particle.enabled %}
+  <div class="wrapper {{particle.class}}">
+    <div class="videocontent">
+  <h2><div class="video-title">{{particle.title}}</div></h2>
+  <div class="video-js-responsive-container vjs-hd">
+        <video id="my-video" {{ particle.autoplay ? "autoplay" : " " }} {{ particle.loop  ? "loop" : " " }} class="video-js vjs-default-skin vjs-16-9 vjs-big-play-centered" controls preload="auto" width="auto" height="auto"
+        poster="{{ url(particle.poster) }}" data-setup='{}'>
+          <source src="{{ particle.url }}" type='video/mp4'>
+          <source src="{{ particle.url }}" type='video/x-flv'>
+          <source src="{{ particle.url }}" type='video/webm'>
+          <source src="{{ particle.url }}" type='video/quicktime'>
+          <source src="{{ particle.url }}" type='video/x-msvideo'>
+          <source src="{{ particle.url }}" type='video/x-ms-wmv'>
+          <source src="{{ particle.url }}" type='application/x-mpegURL'>
+          <p class="vjs-no-js">
+            To view this video please enable JavaScript, and consider upgrading to a web browser that
+            <a href="http://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a>
+          </p>
+      </video>
+  </div>
+</div>
+</div>
+  {% endif %}
+{% endblock %}

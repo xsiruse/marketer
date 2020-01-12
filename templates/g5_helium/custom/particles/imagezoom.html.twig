@@ -1,0 +1,57 @@
+{% extends '@nucleus/partials/particle.html.twig' %}
+
+{% set rand = random() %}
+
+{% block javascript_footer %}
+  {% do gantry.load('jquery') %}
+  <script type="text/javascript" src="{{ url('gantry-theme://js/jquery.elevateZoom.min.js') }}"></script>
+  <script>
+  jQuery( document ).ready(function( $ ) {
+          $('#zoom{{rand}}').elevateZoom({
+              zoomType: "{{particle.mode}}",
+              zoomWindowPosition: {{particle.position}},
+              {{particle.tints ? 'tint: "true",' : ''}}
+              {% if particle.tintscolor %}
+                tintColour: "{{particle.tintscolor}}",
+              {% endif %}
+              {% if particle.tintsopacity %}
+                tintOpacity: "{{particle.tintsopacity}}",
+              {% endif %}
+              {% if particle.mode == "lens" %}
+                lensShape: "{{particle.shape}}",
+              {% endif %}
+              {{particle.scroll ? 'scrollZoom: "true",' : ''}}
+              {{particle.easing ? 'easing: "true",' : ''}}
+              {% if particle.animation %}
+                zoomWindowFadeIn: "true",
+                zoomWindowFadeOut: "true",
+                lensFadeIn: "true",
+                lensFadeOut: "true",
+                zoomTintFadeIn: "true",
+                zoomTintFadeOut: "true",
+              {% endif %}
+
+          });
+        });
+  </script>
+{% endblock %}
+
+{% block particle %}
+    {% if particle.enabled %}
+        <div class="image-zoom-container" style="text-align: center;">
+          <img class="image-zoom" id="zoom{{rand}}" src='{{url(particle.image)}}'
+        {% if particle.zoomimage %}
+          data-zoom-image="{{url(particle.zoomimage)}}"
+        {% endif %}
+
+        {% if particle.width %}
+          width="{{particle.width}}"
+        {% endif %}
+
+        {% if particle.height %}
+          width="{{particle.height}}"
+        {% endif %}
+        />
+       </div>
+    {% endif %}
+{% endblock %}

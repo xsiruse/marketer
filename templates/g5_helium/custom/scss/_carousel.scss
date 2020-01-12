@@ -1,0 +1,30 @@
+.jl-carousel{
+  text-align: center;
+  // Dotnav
+    .uk-slideset-nav{
+      margin-top: 10px;
+    }
+    .uk-slider-nav{
+      margin-top: 10px;
+    }
+    .uk-dotnav>.uk-active>* {
+      background: #fff;
+      border-color: #777
+    }
+    .uk-dotnav>*>* {
+      width: 10px;
+      height: 10px;
+      border: 1px solid #777;
+      background: #777;
+      &:hover{
+        background: #fff;
+        border-color: #777
+      }
+    }
+
+    .jl-carousel-item{
+      a{
+        text-decoration: none;
+      }
+    }
+}

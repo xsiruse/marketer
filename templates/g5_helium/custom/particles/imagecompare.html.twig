@@ -1,0 +1,37 @@
+{% extends '@nucleus/partials/particle.html.twig' %}
+
+{% set rand = random() %}
+
+{% block stylesheets %}
+  <link rel="stylesheet" href="{{ url('gantry-theme://css/juxtapose.min.css') }}" type="text/css"/>
+{% endblock %}
+
+{% block javascript_footer %}
+  {% do gantry.load('jquery') %}
+  <script type="text/javascript" src="{{ url('gantry-theme://js/juxtapose.min.js') }}"></script>
+  <script>
+  var slider = new juxtapose.JXSlider('#imagecompare{{rand}}',
+      [
+          {
+              src: '{{url(particle.image1)}}',
+              label: '{{particle.label1}}',
+          },
+          {
+              src: '{{url(particle.image2)}}',
+              label: '{{particle.label2}}',
+          }
+      ],
+      {
+          animate: true,
+          showLabels: true,
+          showCredits: false,
+          startingPosition: "50%",
+          makeResponsive: true,
+          mode:"{{particle.mode == "1" ? "vertical" : "horizontal"}}"
+      });
+  </script>
+{% endblock %}
+
+{% block particle %}
+  <div id="imagecompare{{rand}}"></div>
+{% endblock %}
